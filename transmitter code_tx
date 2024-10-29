@@ -1,0 +1,32 @@
+#include <VirtualWire.h>  // Include VirtualWire library for RF communication
+
+#define BUTTON_PIN 6       // Define the button pin
+
+char *message;             // Message variable to store data to be sent
+int buttonState;           // Variable to store button read value
+int toggleState = 0;       // Variable to track message toggle state
+
+void setup() {
+  vw_set_tx_pin(12);       // Set transmitter pin (connect to Data pin of RF module)
+  vw_setup(2000);          // Set communication speed (2000 bps)
+  pinMode(BUTTON_PIN, INPUT_PULLUP); // Configure button pin as input with pull-up resistor
+}
+
+void loop() {
+  buttonState = digitalRead(BUTTON_PIN);  // Read button state
+  if (buttonState == LOW && toggleState == 0) {   // Condition to check button press and toggle state
+    message = "a";              // Set message to "a"
+    vw_send((uint8_t *)message, strlen(message));  // Send message
+    vw_wait_tx();               // Wait for message transmission
+    delay(500);                 // Delay for debounce
+    toggleState = 1;            // Update toggle state
+  } 
+  else if (buttonState == LOW && toggleState == 1) {
+    message = "b";              // Set message to "b"
+    vw_send((uint8_t *)message, strlen(message));  // Send message
+    vw_wait_tx();               // Wait for message transmission
+    delay(500);                 // Delay for debounce
+    toggleState = 0;            // Reset toggle state
+  }
+  delay(200);                   // General loop delay to control frequency of message check
+}
