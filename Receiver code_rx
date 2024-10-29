@@ -1,0 +1,23 @@
+#include <VirtualWire.h>   // Include VirtualWire library for RF communication
+
+#define LED_PIN 6          // Define the LED pin
+
+void setup() {
+    vw_set_rx_pin(11);      // Set the receiver pin (connect to the data pin of the RF module)
+    vw_setup(2000);         // Set communication speed (2000 bps)
+    pinMode(LED_PIN, OUTPUT); // Configure LED pin as an output
+    vw_rx_start();          // Start the RF receiver
+}
+
+void loop() {
+    uint8_t message[VW_MAX_MESSAGE_LEN]; // Array to hold received message
+    uint8_t messageLength = VW_MAX_MESSAGE_LEN; // Message length
+
+    if (vw_get_message(message, &messageLength)) { // Check if message received
+        if (message[0] == 'a') {    // Check if received data is 'a'
+            digitalWrite(LED_PIN, HIGH); // Turn LED on
+        } else if (message[0] == 'b') { // Check if received data is 'b'
+            digitalWrite(LED_PIN, LOW);  // Turn LED off
+        }
+    }
+}
