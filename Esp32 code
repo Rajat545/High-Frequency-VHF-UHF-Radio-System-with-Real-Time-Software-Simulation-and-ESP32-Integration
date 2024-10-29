@@ -1,0 +1,19 @@
+#define LED_PIN 2  // Define an LED pin on ESP32 (GPIO 2)
+
+void setup() {
+    Serial.begin(9600);          // Start serial communication with Arduino
+    pinMode(LED_PIN, OUTPUT);     // Set LED pin as output for indication
+}
+
+void loop() {
+    if (Serial.available() > 0) { // Check if data is available on Serial
+        char receivedChar = Serial.read(); // Read the incoming character
+
+        if (receivedChar == 'a') {
+            digitalWrite(LED_PIN, HIGH); // Turn ESP32 LED on if 'a' is received
+        } 
+        else if (receivedChar == 'b') {
+            digitalWrite(LED_PIN, LOW);  // Turn ESP32 LED off if 'b' is received
+        }
+    }
+}
